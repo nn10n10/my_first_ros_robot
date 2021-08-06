@@ -335,7 +335,7 @@
           <velocityGaussianNoise>0 0 0</velocityGaussianNoise>
           <referenceLatitude>36.003412</referenceLatitude>
           <referenceLongitude>139.392960</referenceLongitude>
-          <referenceHeading>0</referenceHeading>
+          <referenceHeading>90</referenceHeading>
       	  <referenceAltitude>0</referenceAltitude>
           <frameId>gps_link</frameId>
           <bodyName>base_link</bodyName>  
