@@ -1,5 +1,4 @@
 <launch>
-  <!-- <include file="$(find leo_gazebo)/launch/leo_gazebo.launch"/> -->
 <!--  Transforms  -->
 <node pkg="tf" type="static_transform_publisher"
 	name="gps_transform"

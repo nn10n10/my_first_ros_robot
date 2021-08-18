@@ -1,0 +1,7 @@
+<launch>
+    <include file="$(find my_simulator)/launch/navsat_transform.launch"/>
+    <!-- <include file="$(find my_simulator)/launch/ekf_localiz.launch"/> -->
+    <include file="$(find my_simulator)/launch/start_map_server.launch"/>
+    <include file="$(find my_simulator)/launch/move_base.launch"/>
+
+  </launch>
