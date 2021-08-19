@@ -1,0 +1,10 @@
+<launch>
+    <node pkg="tf" type="static_transform_publisher"
+        name="gps_transform"
+        args="0 0 0 0 0 0 base_link gps_link 10" />
+    <node pkg="tf" type="static_transform_publisher"
+        name="imu_transform"
+        args="0 0 0 0 0 0 base_link imu_link 10" />
+    <node pkg="tf" type="static_transform_publisher" name="map_to_odom"
+        args="0.0 0.0 0.0 0 0 0.0 /map /odom 1000"/>
+</launch>
