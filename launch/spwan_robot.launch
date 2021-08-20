@@ -8,7 +8,6 @@
     <!-- 在 gazebo 中显示机器人模型 -->
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find myurdf_car)/urdf.rviz" required="true" />
-    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-          args="-urdf -model myrobot -param robot_description -x 0 -y 0"/>
+    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find delivery_robot)/urdf.rviz" required="true" /> -->
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model myrobot -param robot_description -x 0 -y 0"/>
 </launch>
