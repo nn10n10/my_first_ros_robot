@@ -192,6 +192,32 @@
         <child link="head"/>
         <origin xyz="0.1 0 0.04"/>
     </joint>
+    <link name="imu_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+    </link>
+    <joint name="imu_link_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0.05" />
+        <parent link="base_link" />
+        <child link="imu_link" />
+    </joint>
+    <link name="gps_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+    </link>
+    <joint name="gps_link_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 -0.05" />
+        <parent link="base_link" />
+        <child link="gps_link" />
+    </joint>
 
 
     <!-- Drive controller -->

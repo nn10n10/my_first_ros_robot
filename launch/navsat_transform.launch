@@ -17,7 +17,7 @@
  </node>
 <!-- EKF Node -->
 <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization_with_gps">
-  <rosparam command="load" file="$(find my_simulator)/config/gps_localization_config.yaml" />
+  <rosparam command="load" file="$(find my_simulator)/config/test.yaml" />
 </node>
 	
 </launch>

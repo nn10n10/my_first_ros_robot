@@ -1,0 +1,23 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/zmang/catkin_ws/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/zmang/catkin_ws/src/husky/husky_base/include/**",
+        "/home/zmang/catkin_ws/src/my_simulator/include/**",
+        "/home/zmang/catkin_ws/src/rosserial/rosserial_server/include/**",
+        "/home/zmang/catkin_ws/src/rosserial/rosserial_test/include/**",
+        "/home/zmang/catkin_ws/src/turtlebot3_simulations/turtlebot3_fake/include/**",
+        "/home/zmang/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ],
+  "version": 4
+}
