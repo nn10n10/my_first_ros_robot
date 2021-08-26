@@ -263,7 +263,7 @@
               <horizontal>
                 <samples>2</samples>
                 <resolution>1</resolution>
-                <min_angle>--4.71</min_angle>
+                <min_angle>-4.71</min_angle>
                 <max_angle>1.570796</max_angle>
               </horizontal>
               <vertical>
@@ -279,11 +279,10 @@
               <resolution>0.01</resolution>
             </range>
           </ray>
-  
-          <plugin name="gazebo_ros_${name}_controller" filename="libhector_gazebo_ros_sonar.so">
+          <plugin name="gazebo_sonar_controller" filename="libhector_gazebo_ros_sonar.so">
             <gaussianNoise>0.005</gaussianNoise>
             <topicName>sonar/scan</topicName>
-            <frameId>sonar_link</frameId>
+            <frameId>head</frameId>
           </plugin>
         </sensor>
       </gazebo>
