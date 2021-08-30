@@ -1,3 +1,5 @@
+plugins:
+  - {name: sonar_layer,   type: "range_sensor_layer::RangeSensorLayer"}
 #机器人几何参，如果机器人是圆形，设置 robot_radius,如果是其他形状设置 footprint
 robot_radius: 0.12 #圆形
 # footprint: [[-0.12, -0.12], [-0.12, 0.12], [0.12, 0.12], [0.12, -0.12]] #其他形状
@@ -13,7 +15,10 @@ cost_scaling_factor: 3.0
 
 #地图类型
 map_type: costmap
-#导航包所需要的传感器
-# observation_sources: scan
-#对传感器的坐标系和数据进行配置。这个也会用于代价地图添加和清除障碍物。例如，你可以用激光雷达传感器用于在代价地图添加障碍物，再添加kinect用于导航和清除障碍物。
-# scan: {sensor_frame: laser, data_type: LaserScan, topic: scan, marking: true, clearing: true}
+
+sonar_layer:
+  topics: ["/sonar/scan"]
+  no_readings_timeout: 5.0
+  clear_threshold: 0.2
+  mark_threshold: 0.80
+  clear_on_max_reading: false
