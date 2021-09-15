@@ -54,8 +54,11 @@
   <build_depend>rospy</build_depend>
   <build_depend>urdf</build_depend>
   <build_depend>xacro</build_depend>
+  <build_depend>gazebo_ros</build_depend>
+  <build_depend>gazebo_ros_control</build_depend>
+  <build_depend>gazebo_plugins</build_depend>
   <build_export_depend>roscpp</build_export_depend>
-  <build_export_depend>rosmsg</build_export_depend>
+  <build_export_depend>rosmsg</build_export_depend>gazebo
   <build_export_depend>rospy</build_export_depend>
   <build_export_depend>leo_gazebo</build_export_depend>
   <build_export_depend>leo_description</build_export_depend>
