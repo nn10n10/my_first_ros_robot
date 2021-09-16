@@ -15,6 +15,26 @@
       </material>
       <material name="yellow">
         <color rgba="1 1 0 1"/>
+  <!-- 圆柱惯性矩阵 -->
+    <xacro:macro name="cylinder_inertial_matrix" params="m r h">
+        <inertial>
+            <mass value="${m}" />
+            <inertia ixx="${m*(3*r*r+h*h)/12}" ixy = "0" ixz = "0"
+                iyy="${m*(3*r*r+h*h)/12}" iyz = "0"
+                izz="${m*r*r/2}" /> 
+        </inertial>
+    </xacro:macro>
+    <!-- 立方体惯性矩阵 -->
+    <xacro:macro name="Box_inertial_matrix" params="m l w h">
+       <inertial>
+               <mass value="${m}" />
+               <inertia ixx="${m*(h*h + l*l)/12}" ixy = "0" ixz = "0"
+                   iyy="${m*(w*w + l*l)/12}" iyz= "0"
+                   izz="${m*(w*w + h*h)/12}" />
+       </inertial>
+   </xacro:macro>
+
+
       </material>
     <!-- 车身属性 -->
     <xacro:property name="bodywidth" value="0.15" />
@@ -41,6 +61,12 @@
           <origin xyz="0 0 0" rpy="0 0 0" />
           <material name="blue"/>
         </visual>
+        <collision>
+          <geometry>
+              <box size="${bodylen} ${bodywidth} ${bodyheight}"/>
+          </geometry>
+      </collision>
+      <xacro:Box_inertial_matrix m="5" l="${bodylen}" w="${bodywidth}" h="${bodyheight}"/>
       </link>
       <joint name="base_link2base_footprint" type="fixed">
         <parent link="base_footprint" />
@@ -51,7 +77,7 @@
     <!-- 车轮属性 -->
     <xacro:property name="wheel_radius" value="0.0375" />
     <xacro:property name="wheel_length" value="0.02" />
-    <!-- 驱动轮宏实现 -->
+    <!-- 轮宏实现 -->
     <xacro:macro name="add_wheels" params="name flag">
         <link name="${name}_wheel">
           <visual>
@@ -61,6 +87,13 @@
             <origin xyz="0.0 0.0 0.0" rpy="${PI / 2} 0.0 0.0" />
             <material name="black" />
           </visual>
+          <collision>
+            <geometry>
+                <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+            </geometry>
+        </collision>
+        <xacro:cylinder_inertial_matrix m="5" r="${wheel_radius}" h="${wheel_length}"/>
+
         </link>
         <joint name="${name}_wheel2base_link" type="continuous">
             <parent link="base_link" />
@@ -84,6 +117,12 @@
                   </geometry>
                   <material name="yellow"/>
                 </visual>
+                <collision>
+                  <geometry>
+                    <box size="${lenth} ${width} 0.004"/>
+                  </geometry>
+              </collision>
+              <xacro:Box_inertial_matrix m="0.2" l="${lenth}" w="${width}" h="0.004"/>
               </link>
             <joint name="${name}_sensor2base_link" type="fixed">
             <parent link="base_link" />
@@ -103,6 +142,12 @@
           <origin xyz="0 0 0" rpy="0 ${PI/2} 0" />
           <material name="white"/>
         </visual>
+        <collision>
+          <geometry>
+            <box size="0.02 0.05 0.001"/>
+          </geometry>
+      </collision>
+      <xacro:Box_inertial_matrix m="0.5" l="0.02" w="0.05" h="0.001"/>
       </link>
       <joint name="sonar_link2base_link" type="fixed">
         <parent link="base_link" />
