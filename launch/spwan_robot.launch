@@ -11,5 +11,5 @@
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find my_simulator)/config/urdf.rviz" required="true" />
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-          args="-urdf -model myrobot -param robot_description -x 0 -y 0"/>
+          args="-urdf -model myrobot -param robot_description"/>
 </launch>

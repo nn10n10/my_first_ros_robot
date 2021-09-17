@@ -1,158 +1,266 @@
 <?xml version="1.0"?>
 <robot name="physics" xmlns:xacro="http://ros.org/wiki/xacro">
-    <gazebo reference="base_link">
-    </gazebo>
-    <!-- 属性封装 -->
-    <xacro:property name="base_footprint_radius" value="0.001" /> <!-- base_footprint 半径  -->
-    <material name="blue">
-        <color rgba="0 0 0.8 1"/>
-      </material>
-      <material name="black">
-        <color rgba="0 0 0 1"/>
-      </material>
-      <material name="white">
-        <color rgba="1 1 1 1"/>
-      </material>
-      <material name="yellow">
-        <color rgba="1 1 0 1"/>
+
+  <xacro:property name="base_footprint_radius" value="0.001" /> <!-- base_footprint 半径  -->
+  <!-- 底盘 -->
+  <link name="base_footprint">
+    <visual>
+      <geometry>
+        <sphere radius="${base_footprint_radius}" />
+      </geometry>
+    </visual>
+  </link>
+  <!-- 属性封装 -->
+  <material name="blue">
+    <color rgba="0 0 0.8 1" />
+  </material>
+  <material name="black">
+    <color rgba="0 0 0 1" />
+  </material>
+  <material name="white">
+    <color rgba="1 1 1 1" />
+  </material>
+  <material name="yellow">
+    <color rgba="1 1 0 1" />
+  </material>
   <!-- 圆柱惯性矩阵 -->
-    <xacro:macro name="cylinder_inertial_matrix" params="m r h">
-        <inertial>
-            <mass value="${m}" />
-            <inertia ixx="${m*(3*r*r+h*h)/12}" ixy = "0" ixz = "0"
-                iyy="${m*(3*r*r+h*h)/12}" iyz = "0"
-                izz="${m*r*r/2}" /> 
-        </inertial>
-    </xacro:macro>
-    <!-- 立方体惯性矩阵 -->
-    <xacro:macro name="Box_inertial_matrix" params="m l w h">
-       <inertial>
-               <mass value="${m}" />
-               <inertia ixx="${m*(h*h + l*l)/12}" ixy = "0" ixz = "0"
-                   iyy="${m*(w*w + l*l)/12}" iyz= "0"
-                   izz="${m*(w*w + h*h)/12}" />
-       </inertial>
-   </xacro:macro>
+  <xacro:macro name="cylinder_inertial_matrix" params="m r h">
+    <inertial>
+      <mass value="${m}" />
+      <inertia ixx="${m*(3*r*r+h*h)/12}" ixy="0" ixz="0" iyy="${m*(3*r*r+h*h)/12}" iyz="0" izz="${m*r*r/2}" />
+    </inertial>
+  </xacro:macro>
+  <!-- 立方体惯性矩阵 -->
+  <xacro:macro name="Box_inertial_matrix" params="m l w h">
+    <inertial>
+      <mass value="${m}" />
+      <inertia ixx="${m*(h*h + l*l)/12}" ixy="0" ixz="0" iyy="${m*(w*w + l*l)/12}" iyz="0" izz="${m*(w*w + h*h)/12}" />
+    </inertial>
+  </xacro:macro>
 
 
-      </material>
-    <!-- 车身属性 -->
-    <xacro:property name="bodywidth" value="0.15" />
-    <xacro:property name="bodylen" value="0.25" />
-    <xacro:property name="bodyheight" value="0.05" />
-    <xacro:property name="earth_space" value="0.015" /> <!-- 离地间距 -->
-    <xacro:property name="PI" value="3.1415927" />
+  <!-- 车身属性 -->
+  <xacro:property name="bodywidth" value="0.15" />
+  <xacro:property name="bodylen" value="0.25" />
+  <xacro:property name="bodyheight" value="0.05" />
+  <xacro:property name="earth_space" value="0.02" /> <!-- 离地间距 -->
+  <xacro:property name="PI" value="3.1415927" />
 
-    <!-- 宏 -->
-    <!-- 底盘 -->
-    <link name="base_footprint">
-        <visual>
-            <geometry>
-            <sphere radius="${base_footprint_radius}" />
-            </geometry>
-        </visual>
-        </link>
-      <!-- 车身 -->
-      <link name="base_link">
-        <visual>
-          <geometry>
-            <box size="${bodylen} ${bodywidth} ${bodyheight}"/>
-          </geometry>
-          <origin xyz="0 0 0" rpy="0 0 0" />
-          <material name="blue"/>
-        </visual>
-        <collision>
-          <geometry>
-              <box size="${bodylen} ${bodywidth} ${bodyheight}"/>
-          </geometry>
+  <!-- 宏 -->
+  <!-- 车身 -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="${bodylen} ${bodywidth} ${bodyheight}" />
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <material name="blue" />
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${bodylen} ${bodywidth} ${bodyheight}" />
+      </geometry>
+    </collision>
+    <xacro:Box_inertial_matrix m="5" l="${bodylen}" w="${bodywidth}" h="${bodyheight}" />
+  </link>
+  <joint name="base_link2base_footprint" type="fixed">
+    <parent link="base_footprint" />
+    <child link="base_link" />
+    <origin xyz="0 0 ${earth_space + bodyheight / 2 }" />
+  </joint>
+  <!-- 车轮 -->
+  <!-- 车轮属性 -->
+  <xacro:property name="wheel_radius" value="0.0375" />
+  <xacro:property name="wheel_length" value="0.02" />
+  <!-- 轮宏实现 -->
+  <xacro:macro name="add_wheels" params="name flag">
+    <link name="${name}_wheel">
+      <visual>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_length}" />
+        </geometry>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <material name="black" />
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder length="${wheel_length}" radius="${wheel_radius}" />
+        </geometry>
       </collision>
-      <xacro:Box_inertial_matrix m="5" l="${bodylen}" w="${bodywidth}" h="${bodyheight}"/>
-      </link>
-      <joint name="base_link2base_footprint" type="fixed">
-        <parent link="base_footprint" />
-        <child link="base_link" />
-        <origin xyz="0 0 ${earth_space + bodyheight / 2 }" />
-      </joint>
-      <!-- 车轮 -->
-    <!-- 车轮属性 -->
-    <xacro:property name="wheel_radius" value="0.0375" />
-    <xacro:property name="wheel_length" value="0.02" />
-    <!-- 轮宏实现 -->
-    <xacro:macro name="add_wheels" params="name flag">
-        <link name="${name}_wheel">
-          <visual>
-            <geometry>
-              <cylinder radius="${wheel_radius}" length="${wheel_length}" />
-            </geometry>
-            <origin xyz="0.0 0.0 0.0" rpy="${PI / 2} 0.0 0.0" />
-            <material name="black" />
-          </visual>
-          <collision>
-            <geometry>
-                <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
-            </geometry>
-        </collision>
-        <xacro:cylinder_inertial_matrix m="5" r="${wheel_radius}" h="${wheel_length}"/>
+      <xacro:cylinder_inertial_matrix m="2" r="${wheel_radius}" h="${wheel_length}" />
 
-        </link>
-        <joint name="${name}_wheel2base_link" type="continuous">
-            <parent link="base_link" />
-            <child link="${name}_wheel" />
-            <origin xyz="0 ${flag * (bodywidth/2+wheel_length/2)} ${-(earth_space + bodyheight / 2 - wheel_radius) }" />
-            <axis xyz="0 1 0" />
-          </joint>
-        </xacro:macro>
-        <xacro:add_wheels name="left" flag="1" />
-        <xacro:add_wheels name="right" flag="-1" />
-        <!-- 传感器属性 -->
-        <xacro:property name="gps_len" value="0.03" />
-        <xacro:property name="imu_len" value="0.01" />
-        <xacro:property name="imu_width" value="0.02" />
-        <!-- 传感器宏实现 -->
-        <xacro:macro name="add_sensor" params="name lenth width flag">
-            <link name="${name}_link">
-                <visual>
-                  <geometry>
-                    <box size="${lenth} ${width} 0.004"/>
-                  </geometry>
-                  <material name="yellow"/>
-                </visual>
-                <collision>
-                  <geometry>
-                    <box size="${lenth} ${width} 0.004"/>
-                  </geometry>
-              </collision>
-              <xacro:Box_inertial_matrix m="0.2" l="${lenth}" w="${width}" h="0.004"/>
-              </link>
-            <joint name="${name}_sensor2base_link" type="fixed">
-            <parent link="base_link" />
-            <child link="${name}_link" />
-            <origin xyz="0 ${flag*0.03} ${bodyheight/2}" />
-            <axis xyz="0 0 0" />
-            </joint>
-        </xacro:macro>
-        <xacro:add_sensor name="gps" lenth="${gps_len}" width="${gps_len}" flag="-1"/>
-        <xacro:add_sensor name="imu" lenth="${imu_len}" width="${imu_width}" flag="1"/>
-        <!-- 超声波 -->
-      <link name="sonar_link">
-        <visual>
-          <geometry>
-            <box size="0.02 0.05 0.001"/>
-          </geometry>
-          <origin xyz="0 0 0" rpy="0 ${PI/2} 0" />
-          <material name="white"/>
-        </visual>
-        <collision>
-          <geometry>
-            <box size="0.02 0.05 0.001"/>
-          </geometry>
+    </link>
+    <joint name="${name}_wheel2base_link" type="continuous">
+      <parent link="base_link" />
+      <child link="${name}_wheel" />
+      <origin xyz="0 ${flag * (bodywidth/2+wheel_length/2)} ${-(earth_space + bodyheight / 2 - wheel_radius) } " rpy="${-PI / 2} 0.0 0.0"/>
+      <axis xyz="0 0 1" />
+    </joint>
+  </xacro:macro>
+  <xacro:add_wheels name="left" flag="1" />
+  <xacro:add_wheels name="right" flag="-1" />
+  <!-- 传感器属性 -->
+  <xacro:property name="gps_len" value="0.03" />
+  <xacro:property name="imu_len" value="0.01" />
+  <xacro:property name="imu_width" value="0.02" />
+  <!-- 传感器宏实现 -->
+  <xacro:macro name="add_sensor" params="name lenth width flag">
+    <link name="${name}_link">
+      <visual>
+        <geometry>
+          <box size="${lenth} ${width} 0.004" />
+        </geometry>
+        <material name="yellow" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${lenth} ${width} 0.004" />
+        </geometry>
       </collision>
-      <xacro:Box_inertial_matrix m="0.5" l="0.02" w="0.05" h="0.001"/>
-      </link>
-      <joint name="sonar_link2base_link" type="fixed">
-        <parent link="base_link" />
-        <child link="sonar_link" />
-        <origin xyz="${bodylen/2 - 0.001} 0 ${earth_space + bodyheight / 2 }" />
-      </joint>
+      <xacro:Box_inertial_matrix m="0.2" l="${lenth}" w="${width}" h="0.004" />
+    </link>
+    <joint name="${name}_sensor2base_link" type="fixed">
+      <parent link="base_link" />
+      <child link="${name}_link" />
+      <origin xyz="0 ${flag*0.03} ${bodyheight/2}" />
+      <axis xyz="0 0 0" />
+    </joint>
+  </xacro:macro>
+  <xacro:add_sensor name="gps" lenth="${gps_len}" width="${gps_len}" flag="-1" />
+  <xacro:add_sensor name="imu" lenth="${imu_len}" width="${imu_width}" flag="1" />
+  <!-- 超声波 -->
+  <link name="sonar_link">
+    <visual>
+      <geometry>
+        <box size="0.02 0.05 0.001" />
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <material name="white" />
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.02 0.05 0.001" />
+      </geometry>
+    </collision>
+    <xacro:Box_inertial_matrix m="0.5" l="0.02" w="0.05" h="0.001" />
+  </link>
+  <joint name="sonar_link2base_link" type="fixed">
+    <parent link="base_link" />
+    <child link="sonar_link" />
+    <origin xyz="${bodylen/2 - 0.001} 0 ${earth_space + bodyheight / 2 }" rpy="0 ${PI/2} 0"/>
+  </joint>
+  <!-- Drive controller -->
+  <gazebo>
+    <plugin name="turtlebot3_waffle_pi_controller" filename="libgazebo_ros_diff_drive.so">
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <odometrySource>world</odometrySource>
+      <publishOdomTF>true</publishOdomTF>
+      <robotBaseFrame>base_footprint</robotBaseFrame>
+      <publishWheelTF>false</publishWheelTF>
+      <publishTf>true</publishTf>
+      <publishWheelJointState>true</publishWheelJointState>
+      <legacyMode>false</legacyMode>
+      <updateRate>30</updateRate>
+      <leftJoint>left_wheel2base_link</leftJoint>
+      <rightJoint>right_wheel2base_link</rightJoint>
+      <wheelSeparation>${bodywidth+wheel_length/2}</wheelSeparation>
+      <wheelDiameter>${wheel_radius*2}</wheelDiameter>
+      <wheelAcceleration>1</wheelAcceleration>
+      <wheelTorque>10</wheelTorque>
+      <rosDebugLevel>na</rosDebugLevel>
+    </plugin>
+  </gazebo>
+
+  <!-- ros_control plugin -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/robot1</robotNamespace>
+      <legacyModeNS>true</legacyModeNS>
+    </plugin>
+  </gazebo>
+  <!-- add sonar info......................................  -->
+  <gazebo reference="sonar_link">
+    <sensor type="ray" name="sonar">
+      <always_on>true</always_on>
+      <update_rate>0.1</update_rate>
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>false</visualize>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>2</samples>
+            <resolution>1</resolution>
+            <min_angle>-4.71</min_angle>
+            <max_angle>1.570796</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>2</samples>
+            <resolution>1</resolution>
+            <min_angle>-0.01</min_angle>
+            <max_angle> 0.01</max_angle>
+          </vertical>
+        </scan>
+        <range>
+          <min>0.1</min>
+          <max>0.5</max>
+          <resolution>0.01</resolution>
+        </range>
+      </ray>
+      <plugin name="gazebo_sonar_controller" filename="libhector_gazebo_ros_sonar.so">
+        <gaussianNoise>0.005</gaussianNoise>
+        <topicName>sonar/scan</topicName>
+        <frameId>sonar_link</frameId>
+      </plugin>
+    </sensor>
+  </gazebo>
+  <!-- GPS -->
+  <gazebo>
+    <plugin name="gps" filename="libhector_gazebo_ros_gps.so">
+      <updateRate>10.0</updateRate>
+      <topicName>gps/fix</topicName>
+      <gaussianNoise>0.0 0.0 0.0</gaussianNoise>
+      <offset>0 0 0</offset>
+      <velocityGaussianNoise>0 0 0</velocityGaussianNoise>
+      <referenceLatitude>36.003412</referenceLatitude>
+      <referenceLongitude>139.392960</referenceLongitude>
+      <referenceHeading>90</referenceHeading>
+      <referenceAltitude>0</referenceAltitude>
+      <frameId>gps_link</frameId>
+      <bodyName>gps_link</bodyName>
+    </plugin>
+  </gazebo>
+
+  <!-- IMU -->
+  <gazebo>
+    <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+      <alwaysOn>true</alwaysOn>
+      <bodyName>imu_link</bodyName>
+      <frameName>imu_link</frameName>
+      <topicName>imu/data</topicName>
+      <serviceName>imu_service</serviceName>
+      <gaussianNoise>0.0</gaussianNoise>
+      <updateRate>0</updateRate>
+      <imu>
+        <noise>
+          <type>gaussian</type>
+          <rate>
+            <mean>0.0</mean>
+            <stddev>2e-4</stddev>
+            <bias_mean>0.0000075</bias_mean>
+            <bias_stddev>0.0000008</bias_stddev>
+          </rate>
+          <accel>
+            <mean>0.0</mean>
+            <stddev>1.7e-2</stddev>
+            <bias_mean>0.1</bias_mean>
+            <bias_stddev>0.001</bias_stddev>
+          </accel>
+        </noise>
+      </imu>
+    </plugin>
+  </gazebo>
+
 
 </robot>
