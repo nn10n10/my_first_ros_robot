@@ -166,6 +166,8 @@ target_link_libraries(hellow_world
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
   src/gps_goal.py
+  src/waypoint_py.py
+  src/LatLongUTMConvert.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
