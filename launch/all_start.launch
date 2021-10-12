@@ -1,5 +1,5 @@
 <launch>
-    <!-- <include file="$(find my_simulator)/launch/navsat_transform.launch"/> -->
+    <include file="$(find my_simulator)/launch/navsat_transform.launch"/>
     <include file="$(find my_simulator)/launch/tf_transform.launch"/>
     <include file="$(find my_simulator)/launch/start_map_server.launch"/>
     <!-- <include file="$(find my_simulator)/launch/move_base.launch"/> -->

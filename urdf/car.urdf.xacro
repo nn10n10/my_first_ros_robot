@@ -107,7 +107,7 @@
   <xacro:property name="imu_len" value="0.01" />
   <xacro:property name="imu_width" value="0.02" />
   <!-- 传感器宏实现 -->
-  <xacro:macro name="add_sensor" params="name lenth width flag">
+  <!-- <xacro:macro name="add_sensor" params="name lenth width flag">
     <link name="${name}_link">
       <visual>
         <geometry>
@@ -130,7 +130,7 @@
     </joint>
   </xacro:macro>
   <xacro:add_sensor name="gps" lenth="${gps_len}" width="${gps_len}" flag="-1" />
-  <xacro:add_sensor name="imu" lenth="${imu_len}" width="${imu_width}" flag="1" />
+  <xacro:add_sensor name="imu" lenth="${imu_len}" width="${imu_width}" flag="1" /> -->
   <!-- 超声波 -->
   <link name="sonar_link">
     <visual>
@@ -231,7 +231,7 @@
       <referenceHeading>90</referenceHeading>
       <referenceAltitude>0</referenceAltitude>
       <frameId>gps_link</frameId>
-      <bodyName>gps_link</bodyName>
+      <bodyName>base_link</bodyName>
     </plugin>
   </gazebo>
 
@@ -239,7 +239,7 @@
   <gazebo>
     <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
       <alwaysOn>true</alwaysOn>
-      <bodyName>imu_link</bodyName>
+      <bodyName>base_link</bodyName>
       <frameName>imu_link</frameName>
       <topicName>imu/data</topicName>
       <serviceName>imu_service</serviceName>
