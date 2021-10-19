@@ -5,6 +5,11 @@
     <param name="robot_description" command="$(find xacro)/xacro $(find my_simulator)/urdf/car.urdf.xacro" />
     <!-- 启动 gazebo -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch"></include>
+    <include file="$(find my_simulator)/launch/tf_transform.launch"></include>
+    <!-- 启动rosbridge -->
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" > 
+        <arg name="port" value="9090"/>
+     </include>
 
     <!-- 在 gazebo 中显示机器人模型 -->
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
