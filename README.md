@@ -1,4 +1,4 @@
-# my_first_ros_robot  
+# GPS autonomous robot  
 |  enviroment   | version  |
 |  ----  | ----  |
 | ubuntu  | 20.04LTS |
