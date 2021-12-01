@@ -8,10 +8,10 @@ ros::NodeHandle  nh;
 sensor_msgs::Range range_msg;
 ros::Publisher pub_range( "ultrasound", &range_msg);
 
-int pingPin = 2;
-int inPin = 3;
+int pingPin = 10;
+int inPin = 2;
 long range_time;
-char frameid[] = "ultrasound";
+char frameid[] = "sonars";
 
 
 void setup() {
